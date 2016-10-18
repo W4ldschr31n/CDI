@@ -1,0 +1,69 @@
+{% extends '::base.html.twig' %}
+
+{% block stylesheets %}
+    <style>
+        ul{
+            list-style: none;
+            padding: 0;
+        }
+        
+        .article{
+            width: 100%;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            background-color: #E8E8E8;
+            color: black;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        
+        .article h4{
+            font-size: 13px;
+            text-transform: uppercase;
+            margin: 0;
+            color: black;
+        }
+
+        .article:hover{
+            background-color: #D9D9D9;
+        }
+        
+        .article p{
+            font-size: 12px;
+            margin: 0;
+            margin-top: 4px;
+        }
+
+        .pagination{
+            color: black;
+            background-color: #E8E8E8;
+            font-family: Arial;
+            padding: 3px;
+        }
+
+        .pagination:hover{
+            font-weight: bold;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <section id="contenu">
+    <h2 class="fil_ariane"><a href="{{ path('administration') }}">Administration</a> > RÉSULTAT DE LA RECHERCHE</h2>
+    <ul>
+        {% for article in articles %}
+            <a href="{{ path('article_voir', {'id' : article.id}) }}">
+            <li class="article">
+                <h4>{{ article.titre }}</h4>
+                <p>Le {{ article.dateParution|date('d/m/Y') }} dans {{ article.periodique.nom }}</p>
+            </li>
+            </a>
+        {% endfor %}
+    </ul>
+
+    {% for i in range(1, nbPage) %}
+        <a class="pagination" href="{{ path('article_liste', {'page' : i }) }}">{{ i }}</a>
+    {% endfor %}
+    </section>
+{% endblock %}

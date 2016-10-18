@@ -1,0 +1,89 @@
+{% extends '::base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/base.css') }}"/>
+    <style>
+        ul{
+            list-style: none;
+            padding: 0;
+        }
+        
+        .article{
+            width: 100%;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            background-color: #E8E8E8;
+            color: black;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        
+        .article h4{
+            font-size: 13px;
+            text-transform: uppercase;
+            margin: 0;
+            color: black;
+        }
+
+        .article:hover{
+            background-color: #D9D9D9;
+        }
+        
+        .article p{
+            font-size: 12px;
+            margin: 0;
+            margin-top: 4px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<section id="contenu">
+    {% if app.session.get('status') is defined and app.session.get('status') == 'etudiant' %}
+        <h2 class="fil_ariane"><a href="{{ path('accueil') }}">Accueil</a> > RÉSULTAT DE LA RECHERCHE</h2>
+    {% else %}
+        <h2 class="fil_ariane"><a href="{{ path('administration') }}">Administration</a> > RÉSULTAT DE LA RECHERCHE</h2>
+    {% endif %}
+    <section class="section" style="margin-bottom: 40px; position: relative; top: -10px;">
+        <h3 style="margin: 0; font-size: 14px; font-weight: normal; text-transform: uppercase; margin-bottom: 5px; margin-top: -10px;">Recherche :</h3>
+        {% include 'AppBundle::formulaireRecherche.html.twig' %}
+    </section>
+    {# Si la recherche trouve des articles, on affiche la liste #}
+    {% if articles %}
+    <section>
+        <ul>
+        {% for article in articles %}
+            <a href="{{ path('article_voir', {'id' : article.id}) }}">
+            <li class="article">
+                <h4>{{ article.titre }}</h4>
+                <p>Le {{ article.dateParution|date('d/m/Y') }} dans {{ article.periodique.nom }}</p>
+            </li>
+            </a>
+        {% endfor %}
+        </ul>
+    </section>
+    {# Si la recherche ne trouve pas d'articles #}
+    {% else %}
+    <div class="erreur">
+        Aucun article n'a été trouvé dans la base de données.
+    </div>
+    {% endif %}
+</section>
+
+<script type="text/javascript">
+    document.getElementById("recherche_avancee").addEventListener("click", function(){
+        // Afficher
+        if(document.getElementById("champs_recherche_avancee").style.display == "none"){
+            document.getElementById("champs_recherche_avancee").style.display = "block";
+            document.getElementById("recherche_avancee").innerHTML = "Fermer la recherche avancée";
+        }
+        
+        // Cacher
+        else{
+            document.getElementById("champs_recherche_avancee").style.display = "none";
+            document.getElementById("recherche_avancee").innerHTML = "Recherche avancée";
+        }
+    });
+</script>
+{% endblock %}
